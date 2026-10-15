@@ -1,0 +1,551 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[margin=2.3cm]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{graphicx}
+\usepackage{amsmath,amssymb}
+\usepackage{siunitx}
+\usepackage{hyperref}
+\usepackage{physics}
+\usepackage{enumitem}
+\usepackage{float}
+\usepackage[section]{placeins}
+
+\sisetup{per-mode=symbol, separate-uncertainty=true}
+
+\title{Rocket Propulsion -- Homework Project 2025\\
+\large Psyche Mission: Trajectory and Propulsion Analysis}
+\author{%
+Nathan Fagnou
+}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.55\textwidth]{Psyche_probe.jpg}
+    \caption{NASA Psyche spacecraft [1]}
+    \label{fig:psyche_probe}
+\end{figure}
+
+\begin{abstract}
+Asteroid (16)~Psyche is one of the largest asteroids in the main asteroid belt and is a type~M asteroid (for Metal). It was discovered in 1852 by Annibale De~Gasparis.
+It orbits the Sun at roughly 3~AU and has a diameter of about 250~km, making it one of the ten most massive asteroids. What makes Psyche exceptional is its unusual composition: spectral measurements indicate that it is rich in metals, particularly iron and nickel, unlike most asteroids, which are rocky or icy. Because of this, Psyche is often described as the possible exposed core of an early protoplanet whose outer layers were stripped away by violent collisions during the early Solar System.
+
+If this interpretation is correct, 16~Psyche would offer the first direct access to planetary core material, something we cannot observe even inside Earth.
+\end{abstract}
+
+\newpage
+\tableofcontents
+
+\newpage
+%-------------------------- SECTION 1
+\section{Psyche and Falcon Heavy datasheet}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.55\textwidth]{SPACEX_1200x700-5a7a.jpeg}
+    \caption{Falcon Heavy first flight}
+    \label{fig:psyche_probe}
+\end{figure}
+\subsection{Psyche spacecraft datasheet [1]}
+
+
+\begin{table}[H] 
+
+    \centering
+    \caption{Main characteristics of the Psyche spacecraft}
+    \begin{tabular}{l l}
+        \hline
+        Parameter & Value \\
+        \hline
+        Mission target                    & Asteroid 16~Psyche \\
+        Launch date                       & 13 October 2023 \\
+        Launch vehicle                    & Falcon Heavy \\
+        Launch mass (wet)                 & \SI{2747}{kg} \\
+        Propellant (xenon)                & \SI{1085}{kg} \\
+        Solar array power (at 1~AU)       & \SI{4.5}{kW} \\
+        Number of main thrusters          & 4 \\
+        Thruster type                     & SPT-140 Hall-effect thruster \\
+        Thruster nominal thrust           & \SI{0.28}{N} per thruster \\
+        Specific impulse                  & \SI{1800}{s} \\
+        Total impulse capability          & \SI{8.2e6}{N.s} (about 8.2 MN.s) \\
+        \hline
+    \end{tabular}
+\end{table}
+
+
+
+%-------------------------- SECTION 3 — DATASHEET
+\subsection{Falcon Heavy datasheet [2]}
+
+\begin{table}[H]
+    \centering
+    \caption{Main characteristics of Falcon Heavy}
+    \begin{tabular}{l l}
+        \hline
+        Parameter          & Value \\
+        \hline
+        Height             & \SI{70}{m} \\
+        Core / booster diameter & \SI{3.7}{m} \\
+        Overall width      & \SI{12.2}{m} \\
+        Maximal mass          & \SI{1420788}{kg}\\
+        Dry mass               & \SI{72300}{kg}\\
+        Payload to Low Earth Orbit (LEO)   & \SI{63800}{kg} \\
+        Payload to Geostationary Transfer Orbit (GTO) & \SI{26700}{kg} \\
+        Payload to Mars                    & \SI{16800}{kg} \\
+        Liftoff mass       & \SI{1.42e6}{kg} \\
+        Propellant         & LOX / RP-1 \\
+        Stages             & 2.5 (two boosters + center core + upper stage) \\[2pt]
+        Total thrust at liftoff (SL) & \SI{15200}{kN} \\
+        Total thrust in vacuum       & \SI{16400}{kN} \\
+        Specific impulse (SL)        & \SI{282}{s} \; (\SI{2.77}{km/s}) \\
+        Specific impulse (vacuum)    & \SI{311}{s} \; (\SI{3.05}{km/s}) \\
+        \hline
+    \end{tabular}
+\end{table}
+
+\begin{table}[H]
+    \centering
+    \caption{Falcon Heavy first-stage and booster data}
+    \begin{tabular}{l l}
+        \hline
+        Parameter          & Value \\
+        \hline
+        Number of boosters & 2 side boosters + 1 center core \\
+        Engines per core   & 9 $\times$ Merlin~1D (sea-level) \\
+        Propellant         & LOX / RP-1 \\
+        Thrust per core (SL) & \SI{7600}{kN} \\
+        Thrust per core (vac) & \SI{8200}{kN} \\
+        Total thrust (3 cores, SL) & \SI{15200}{kN} \\
+        Total thrust (3 cores, vac) & \SI{16400}{kN} \\
+        Specific impulse (SL) & \SI{282}{s} \; (\SI{2.77}{km/s}) \\
+        Specific impulse (vac) & \SI{311}{s} \; (\SI{3.05}{km/s}) \\
+        Burn time (boosters / center core) & $\sim\SI{180}{s}$ \\
+        \hline
+    \end{tabular}
+\end{table}
+
+\begin{table}[H]
+    \centering
+    \caption{Falcon Heavy second-stage data}
+    \begin{tabular}{l l}
+        \hline
+        Parameter          & Value \\
+        \hline
+        Stage type         & Second stage \\
+        Engine             & 1 $\times$ Merlin~1D Vacuum \\
+        Propellant         & LOX / RP-1 \\
+        Thrust (vacuum)    & \SI{934}{kN} \\
+        Specific impulse (vacuum) & \SI{348}{s} \; (\SI{3.41}{km/s}) \\
+        Burn time          & \SI{397}{s} \\
+        \hline
+    \end{tabular}
+\end{table}
+
+\FloatBarrier
+
+\newpage
+\section{Psyche mission and launch profile, $\Delta V$ and propellant mass used}
+
+\subsection{Psyche mission and launch profile}
+Nasa approved a mission for Psyche on January 4, 2017 and attributed to SpaceX for a contract of 117 million dollars. The mission profile is the following ; \\
+- Launch on the 13 October 2023 using a falcon heavy rocket from Cape Canaveral's base. \\
+- Verification of the probe's systems during the first 100 days after launch \\
+- Mars gravity assist (May 2026) \\
+- Tests of the experimental DSOC laser communication system (pink points)\\
+- Spacecraft trajectory \\
+- Orbital insertion around Psyche (August 2029)\\
+
+The spacecraft will only use one of its four thrusters to maintain a certain temperature interval during the mission. The Psyche mission is also the first mission to use \textbf{Hall-effect thrusters}. \\
+The main goal of the mission is to learn about the process of planet's formation. To make this mission successful, Psyche is equipped with a magnetometer, spectrometers and two cameras to measure magnetic field, presence of chemical elements, etc.
+
+
+
+
+%-------------------------- SECTION 4 — ΔV
+\subsection{Calculation of needed $\Delta v$ and propellant mass}
+We will use the following hypothesis to determine the $\Delta v$ :\\
+- The launch is vertical \\
+- The launch is drag free \\
+
+To escape Earth gravity from the ground an object must have the following escape velocity ;\\
+\[
+{\mathrm{es}} = \sqrt{\frac{2GM}{R}}
+\]
+Numerical application : 
+\[
+\boxed{v_{\mathrm{es}} = \sqrt{\frac{2 \times 6.67\times10^{-11} \times 5.97\times10^{24}}{6.378\times10^{6}}}
+= 11.2\,km.s^{-1}}
+\]
+
+Therefore, the needed $ \Delta V $ must be 11.2 $km.s^{-1}.\\
+
+From Falcon Heavy's datasheet ke know that the maximal wet mass is 1.420.788 kg (thus including payload for LEO), the dry mass is 72.300 kg and payload for LEO is 63.800 kg. To find $m_0$ we have to add the mass of Psyche, thus ;
+\[
+m_0 = m_{max} - m_{payload,LEO} - m_{dry\,mass} + m_{psyche}
+\]
+where : 
+\[
+m_{psyche} = m_{launch\,mass} + m_{propellant}
+\]
+Numerical application : 
+\[
+m_0 = 1.420.788-63.800-72.300+2747+1085 = 1.288.520 \, kg
+\]
+Now for the propellant mass, we will use the Tsiolkovski's equation ;\\
+\[
+\Delta v = c \, \ln\!\left(\frac{m_{\mathrm{0}}}{m_{\mathrm{f}}}\right)
+\]
+We can wewrite it using the Specific Impulse and g ; 
+\[
+\Delta v = I_s\,g \ln\!\left(\frac{m_{\mathrm{0}}}{m_{\mathrm{f}}}\right)
+\]
+
+We then isolate $m_0$:\\
+\[
+m_0 = m_f \, \exp\!\left(\frac{\Delta v}{I_{sp}\, g}\right)
+\]
+Knowing $m_p = m_0 - m_f$ ;\\
+\[
+m_p = m_0(1- \, \exp\!\left(\frac{\Delta v}{I_{sp}\, g}\right)
+\]
+
+%-------------------------- SECTION 5 — ISP TOTAL
+We know want to find $\dot{m}_{tot}$ knowing :
+
+\[
+\dot{m}_{\mathrm{tot}} = \sum_i \frac{F_i}{I_{sp,i}\, g}
+\]
+We can then replace $\dot{m}_{tot}$ :
+\[
+I_{sp,\mathrm{tot}} = 
+\frac{\sum_i F_i}{
+\sum_i \frac{F_i}{I_{sp,i}}
+}
+\]
+
+Numerical application for $I_{sp,\mathrm{tot}}$ : \\
+\[
+I_{sp,\mathrm{tot}} = \frac{7 600.10^3 + 7600.10^3 + 934.10^3}{\frac{7600.10^3}{282}+ \frac{7600.10^3}{282} + \frac{934.10^3}{348}} = 285 s
+\]
+We can know calculate $m_p$ : \\
+\[
+\boxed{m_p = 1288520(1- \, \exp\!\left(\frac{-11,2.10^3}{285*9,81}\right) \approx 1265\,\text{Tons}}
+\]
+
+The result we find is inferior to the maximum ergols mass cited in Destination-Orbite's article about Falcon Heavy which seems coherent [3]. 
+
+
+\newpage
+\section{Needed $\Delta v$ and propellant mass for a direct flight to Psyche
+asteroid from any Earth’s parking orbit, without any trajectory gravity
+assist (as will be done in real life). }
+
+\subsection{Direct trajectory}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.55\textwidth]{car_better.jpg}
+    \caption{Tesla's roadster direct trajectory to (16) Psyche}
+    \label{fig:psyche_probe}
+\end{figure}
+We know consider a direct trajectory to (16) Psyche, we found at the previous question that the need velocity to escape earth attraction was :\\
+\[
+v_{es,earth}= 11,2\,km.s^{-1}
+\]
+But now we also have to consider the sun's attraction. Knowing that the distance from Earth to the Sun is equal to one Astronomical Unit :\\
+\[
+1\,AU \approx 1,496.10^{11}\,m
+\]
+To escape sun's attraction, we must have the following escape velocity :\\
+\[
+v_{es,sun} = \sqrt{\frac{2*G*M_{sun}}{AU+h}} \,where\, h = R_{earth}
+\]
+ where h = $R_{earth}$, but $R_{earth} << 1 AU,$ thus We obtain the following expression : \\
+\[
+v_{es,sun} = \sqrt{\frac{2*G*M_{sun}}{AU}} 
+\]
+Numerical application : \\
+\[
+v_{es,sun} \approx \sqrt{\frac{2*6,67.10^{-11}*1,989.10^{30}}{1,496.10^{11}}} \approx 4,21.10^5\,m.s^{-1} \approx 42,1\,km.s^{-1}
+\]
+Since Earth orbits the Sun at an orbital speed of about $29.8 km.s^{-1}$, or true escape velocity is the following :\\
+\[
+v_{es,sun,true} = v_{es,sun} - v_{orb,earth}
+\]
+Numerical application : \\
+\[
+\boxed{v_{es,sun,true} = 42.1 - 29.8 = 12,3 km.s^{-1}}
+\]
+
+Using the expression of $m_p$ from question one, we have the following expression in function of $v_{es,sun}$:\\
+\[
+m_p = m_0(1- \, \exp\!\left(\frac{v_{es,sun,true}}{I_{sp}\, g}\right)
+\]
+Numerical application : \\
+\[
+\boxed{m_p = 1288520(1- \, \exp\!\left(\frac{-12,3.10^3}{285*9,81}\right) \approx1273\,\text{Tons}}
+\]
+The distance between the sun and (16) Psyche is between 2.53 et 3.32 AU [1] so the distance between Earth and (16) Psyche is between 300 and 600 million kilometers. So if we consider a constant speed of 42.1 $km.s^{-1}$, we can fin a interval for the needed time to reach (16) Psyche : \\
+\[
+\frac{300.10^6}{42,1} \leq T_{travel} \leq \frac{600.10^6}{42,1}
+\]
+Numerical application :
+\[
+7,12.10^6s \leq T_{travel} \leq 14,3.10^5s
+\]
+So converting in days :\\
+\[
+82\,days \leq T_{travel} \leq 164\, days
+\]
+
+
+
+\subsection{Entering an orbit around the Sun intersecting Psyche, no intermediate slingshots around other bodies.}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.55\textwidth]{buzz_lightyear.jpg}
+    \caption{Toy Story meme}
+    \label{fig:psyche_probe}
+\end{figure}
+In this case, we will use the \textbf{Hohmann transfer orbit} [10] between Earth's orbit and (16) Psyche's orbit because it reduces the amount of propellant needed in our case ( 2 maneuvers trajectory).
+
+Since Psyche (the probe satellite) can be considered as a small body compared to earth or the Sun, its total energy is the following ; \\
+\[
+E = \frac{mv^2}{2} - \frac{GMm}{r} = \frac{-GMm}{2a} 
+\]
+By solving this equation, we obtained the \textbf{vis-viva equation} :\\
+\[
+v^2 = \mu(\frac{2}{r} - \frac{1}{a})
+\]
+v is the speed of Psyche.
+$\mu = GM$ is the standard gravitational parameter, M the mass of the sun.
+r is the distance of Psyche to the sun/(16) Psyche.
+a is the semi-major axis of Psyche's orbit.
+The two $\Delta v$ needed are the following :\\
+\[
+\Delta v_1 = \sqrt{\frac{\mu}{r_1}}(\sqrt{\frac{2r_2}{r_1 + r_2}}-1)
+\]
+\[
+\Delta v_2 = \sqrt{\frac{\mu}{r_2}}(1-\sqrt{\frac{2r_1}{r_1 + r_2}})
+\]
+where $r_1 = 1\,AU$ and $r_2 \approx 2.92\,AU$ (we will take the mean of  between 2.53 et 3.32 AU)
+Numerical application ; \\
+\[
+\Delta v_1 =  \sqrt{\frac{6,67.10^{-11}*1,989.10^{30}}{1,496.10^{11}}}(\sqrt{\frac{2*2,92*1,496.10^{11}}{1,496.10^{11}+2,92*1,496.10^{11}}}-1) \approx 6.57\,km.s^{-1}
+\]
+\[
+\Delta v_2 =  \sqrt{\frac{6,67.10^{-11}*1,989.10^{30}}{2,92*1,496.10^{11}}}(1-\sqrt{\frac{2*1,496.10^{11}}{1,496.10^{11}+2,92*1,496.10^{11}}}) \approx 4.98\,km.s^{-1}
+\]
+So finally the total $\Delta v$ is : \\
+\[
+\Delta v_{total} = \Delta v_1 + \Delta v_2
+\]
+\[
+\boxed{\Delta v_{total} = 11,55\,km.s^{-1}}
+\]
+Now for the propellant mass needed, we will still use Tsiolkovski’s equation :\\
+\[
+m_p = m_0(1- \, \exp\!\left(\frac{-\Delta v_{total}}{I_{sp}\, g}\right))
+\]
+Numerical application :\\
+\[
+\boxed{m_p = 1288520(1- \exp\!\left(\frac{-11,55.10^3}{285*9.81}\right)) \approx 1268\,Tons}
+\]
+Using Kepler's third law, we can find the time taken to transfer between the orbits : \\
+\[
+t_H = \pi\sqrt{\frac{(r_1+r_2)^3}{8\mu}}
+\]
+\[
+\boxed{t_H \approx 501\,days}
+\]
+The Gap between the two trajectories it clearly not negigible, but this trajectory is still way more time effective than the actual mission (which is around 6 years).
+
+
+
+
+\newpage
+\section{Orbital slingshots (gravity assists)}
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.6\textwidth]{orbital_slingshot.png}
+    \caption{Gravity maneuvers of Psyche [4]}
+    \label{fig:myimage}
+\end{figure}
+
+A gravity assist (also called orbital slingshot) is a technique where a spacecraft flies close to a planet and uses its gravity field to change its velocity and trajectory, without propellant use. The idea is that the spacecraft exchanges energy and momentum with the planet.
+
+In the reference frame of the planet, the spacecraft comes in on a hyperbolic trajectory and leaves with almost the same speed, only the direction has changed. But in the heliocentric frame (around the Sun), the planet itself is moving. Because of this, after the flyby the spacecraft can have a higher or a lower heliocentric velocity, depending if it passes ``in front of'' or ``behind'' the planet relative to its motion.
+
+In practice, mission designers use gravity assists to:
+\begin{itemize}
+    \item increase the heliocentric speed of the spacecraft and reach a more distant orbit (for example outer planets or the asteroid belt);
+    \item or decrease its speed to fall toward the inner Solar System;
+    \item change the inclination or direction of the trajectory without paying the full $\Delta v$ with rocket engines.
+\end{itemize}
+
+For the Psyche mission, the spacecraft will use a Mars gravity assist in 2026. By flying through the gravity field of Mars and leaving it in the correct direction, Psyche increases its speed and adjusts its orbit so that it can intersect the orbit of asteroid 16~Psyche, while saving a significant amount of chemical or electric propellant compared to a direct impulsive transfer [7].
+
+\newpage
+\section{The Oberth effect}
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.6\textwidth]{interstellar.png}
+    \caption{Escape of Gargantua, Interstellar}
+    \label{fig:myimage}
+\end{figure}
+
+The Oberth effect describes the fact that applying thrust when a spacecraft is deep inside a gravitational well, and therefore moving at high velocity, produces a much larger increase in kinetic energy than the same thrust applied farther away. The difference between a gravity assist and the Oberth effect is that gravity assists do not require any propellant, while the Oberth effect explicitly comes from firing the engine at the right moment.\\
+
+
+This means that the spacecraft sweeps equal areas in equal times, and therefore its velocity is highest at periapsis and lowest at apoapsis. Because of this, performing a burn at periapsis maximises the work done by the engine and the resulting gain in orbital energy. The Oberth effect is therefore strongest when the spacecraft is at its closest point to the central body.\\
+
+This effect is well described in Interstellar when Cooper and his crew use the gravitaionnal well of gargantua to gain velocity and, when reaching maximum velocity, use every thrusters to escape Gargantua's attraction.
+
+\newpage
+\section{Orbit insertion around (16) Psyche}
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.6\textwidth]{Psyche_Orbital_Operations.jpg}
+    \caption{Orbital operations of Psyche [1]}
+    \label{fig:myimage}
+\end{figure}
+
+We consider here a circular orbit similar to Orbit~A from the real mission profile, at an altitude
+\[
+h \approx \SI{709}{km}
+\]
+above the surface of 16~Psyche.
+
+The effective radius of Psyche is about
+\[
+R \approx \SI{126.5}{km}\,[5],
+\]
+so the orbital radius is
+\[
+r = R + h \approx 126.5 + 709 \approx \SI{836}{km}.
+\]
+
+Recent analyses give a gravitational parameter for Psyche of
+\[
+\mu = GM = 6.67.10^{-11}*1.7.10^{19}\approx {1,1.10^9}{\,m^3.s^{-2}}.
+\]
+
+The circular orbital velocity at this altitude is then
+\[
+v_{\mathrm{orb}} = \sqrt{\frac{\mu}{r}}
+= \sqrt{\frac{1,1.10^9}{836.10^3}}
+= \SI{36}{m/s}.
+\]
+
+If we assume that, at arrival, Psyche has already reduced its relative velocity with respect to the asteroid to a very small value (typical for a solar electric propulsion rendezvous), the order of magnitude of the $\Delta v$ needed to be captured in this circular orbit is
+\[
+\Delta v_{\mathrm{capture}} \approx v_{\mathrm{orb}} \approx \SI{36}{m/s}.
+\]
+
+Now we can estimate the propellant mass needed on board the Psyche spacecraft to provide this $\Delta v$ using its Hall-effect thrusters. We approximate:
+\begin{itemize}
+    \item initial wet mass of the spacecraft (at launch): $m_0 \approx \SI{2747}{kg}$,
+    \item specific impulse of the SPT-140 thrusters: $I_{sp} \approx \SI{1800}{s}$,
+    \item standard gravity: $g = \SI{9.81}{m/s^2}$.
+\end{itemize}
+
+Using Tsiolkovski's equation in the form
+\[
+\Delta v = I_{s}\, g \ln\!\left(\frac{m_0}{m_f}\right),
+\]
+we can isolate the final mass $m_f$ and deduce the propellant mass:
+\[
+m_{\mathrm{p}} = m_0 - m_f
+= m_0 \left(1 - \exp\left(-\frac{\Delta v_{\mathrm{capture}}}{I_{s} g}\right)\right).
+\]
+
+Numerical application:
+\[
+\frac{\Delta v_{\mathrm{capture}}}{I_s g}
+= \frac{36}{1800 \times 9.81}
+\approx 2.0\times10^{-3},
+\]
+so
+\[
+m_{\mathrm{p}} \approx 2747 \left(1 - e^{-2.0\times10^{-3}}\right)
+\approx \SI{5.489}{kg}.
+\]
+
+Therefore, the $\Delta v$ needed to slow down and enter a low orbit around Psyche is of the order of
+\[
+\boxed{\Delta v_{\mathrm{capture}} \approx \SI{36}{m/s}}
+\]
+and requires only about
+\[
+\boxed{m_{\mathrm{p}} \approx \SI{5.489}{kg}}
+\]
+of xenon if done with the high-$I_{sp}$ Hall-effect thrusters. Compared to the total xenon mass on board (about \SI{915}{kg}), this is only about $0.6\%$, so the increase of launch mass due to orbit insertion propellant is very small.
+
+\newpage
+\section{Hall-effect thrusters versus classic thermal rocket engines}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.6\textwidth]{hall_effect_thrusters.jpg}
+    \caption{Hall effect thruster operating with Krypton [9]}
+    \label{fig:myimage}
+\end{figure}
+
+Hall-effect thrusters, like the SPT-140 used on Psyche, are electric propulsion devices. They use electrical power from the solar arrays to ionise a neutral gas (xenon) and accelerate the ions with an electric field, while a magnetic field confines the electrons [5]. The result is a plasma jet with a very high exhaust velocity, and therefore a very high specific impulse compared to chemical rockets.
+
+For Psyche's SPT-140, the nominal characteristics are:
+\begin{itemize}
+    \item thrust $\approx \SI{0.28}{N}$ per thruster,
+    \item specific impulse $I_{sp} \approx \SI{1800}{s}$,
+    \item input power up to about \SI{4.5}{kW}.
+\end{itemize}
+
+In comparison, classic chemical rocket engines (thermal engines using combustion of LOX/RP-1, LOX/LH$_2$, etc.) typically have:
+\begin{itemize}
+    \item much higher thrust (kN to MN range),
+    \item but a much lower specific impulse, often around $\SI{300}{s}$ for kerosene engines and up to $\SI{450}{s}$ for the best hydrogen engines.
+\end{itemize}
+
+The main advantages of Hall-effect thrusters in deep space are:
+\begin{itemize}
+    \item \textbf{Much higher propellant efficiency:} with $I_{sp} \approx 1800\ \text{s}$, the same total $\Delta v$ can be obtained with several times less propellant mass than with chemical propulsion. This is very important for interplanetary missions where launch mass is limited.
+    \item \textbf{Continuous low thrust:} the thrusters can operate for thousands of hours at low thrust. This allows slow but very efficient changes of orbit (spiral out from Earth orbit, rendezvous with an asteroid, changes of science orbit around the target, etc.).
+    \item \textbf{Good use of solar power:} far from Earth, solar panels can still provide electrical power, which is converted into kinetic energy of the ions instead of using chemical energy stored in propellants.
+\end{itemize}
+
+The disadvantages are mainly:
+\begin{itemize}
+    \item the thrust is very low, so they cannot be used for launch from the ground or for fast impulsive maneuvers;
+    \item the mission design must accept long thrust durations (months or years) to build up the required total $\Delta v$.
+\end{itemize}
+
+For Psyche, Hall-effect thrusters are an excellent solution: they allow the spacecraft to accumulate a large total $\Delta v$ during the cruise and to perform all the orbital changes around the asteroid, while keeping the xenon mass (and so the launch mass) at a reasonable level.
+
+
+\section{acknowledgements}
+I would like to thank Mister GARCIA-MARTIN Pablo for this homework assignment. Honestly, it was quite challenging and more interesting than conventional exams or traditional homework assignments.I hope you enjoyed reading mine and hopefully the memes did not bother you ! 
+
+\newpage
+
+\section*{Sources}
+
+\begin{itemize}
+    \item [1] Psyche Spacecraft (Wikipedia) — \url{https://en.wikipedia.org/wiki/Psyche_(spacecraft)}
+    \item [2] SpaceX Falcon Heavy — \url{https://www.spacex.com/vehicles/falcon-heavy/}
+    \item [3] La fusée américaine Falcon Heavy — \url{https://destination-orbite.net/astronautique/compendium/falcon-heavy}
+    \item [4] article photo - \url{https://medium.com/the-nasa-psyche-mission-journey-to-a-metal-world/psyche-is-an-sep-mission-whats-that-mean-f56f7f0c8a89}
+    \item [5] (16) Psyche - \url{https://fr.wikipedia.org/wiki/(16)_Psych%C3%A9}
+    \item [6] Psyche Fact Sheet, NASA/JPL — \url{https://d2pn8kiwq2w21t.cloudfront.net/documents/Psyche_Fact_Sheet_9.4.23.pdf}
+    \item [7] Psyche Mission Timeline (ASU/NASA) — \url{https://psyche.ssl.berkeley.edu/timeline/}
+    \item [8] Mass, Density, and Radius of Asteroid (16) Psyche from High-precision Astrometry, AJ 168, 21 (2024).
+    \item [9] Illustration of a Hall effect Thruster - \url{https://projects-web.engr.colostate.edu/ionstand/research/research.php}
+    \item [10] Hohmann transfer orbit (Wikipedia) - \url{https://en.wikipedia.org/wiki/Hohmann_transfer_orbit}
+\end{itemize}
+
+
+\end{document}
